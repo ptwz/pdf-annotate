@@ -40,6 +40,7 @@ class Annotation(object):
     editing.
     """
     versions = ALL_VERSIONS
+    _page_as_parent = True
 
     def __init__(self, location, appearance, metadata=None, related = {}):
         """
@@ -72,8 +73,10 @@ class Annotation(object):
             Subtype=PdfName(self.subtype),
             Rect=bounding_box,
             AP=appearance_stream,
-            P=page,
         )
+        if self._page_as_parent:
+            obj.P = page
+
         for name in self._related:
             subobject = self._related[name].as_pdf_object(transform, page)
             setattr(obj, name, subobject)

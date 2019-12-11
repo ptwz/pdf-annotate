@@ -303,6 +303,8 @@ class PdfAnnotator(object):
             annotation.page,
             self._pdf.get_rotation(annotation.page),
         )
+        if not annotation._page_as_parent:
+            return
         annotation_obj = annotation.as_pdf_object(transform, page)
 
         if page.Annots:

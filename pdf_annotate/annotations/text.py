@@ -379,8 +379,9 @@ class PopupText(FreeText):
     Implements a "notepad" style text annotation, which should be couples
     into another annotation by using the /Popup property
     """
-    subtyp = "Text"
+    subtype = "Text"
     indirect = True
+    _page_as_parent = False
 
     '''
     TODO: Add Contents
