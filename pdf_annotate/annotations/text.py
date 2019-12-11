@@ -42,26 +42,6 @@ HELVETICA_PATH = os.path.join(
     'Helvetica.ttf',
 )
 
-class Text(FreeText):
-    """Text Annotation. Based upon FreeText.
-    Implements a "notepad" style text annotation, which should be couples
-    into another annotation by using the /Popup property
-    """
-    subtyp = "Text"
-    indirect = True
-
-    '''
-    TODO: Add Contents
-    '''
-    def add_additional_pdf_object_data(self, obj):
-        obj.Contents = self._appearance.content
-        obj.DA = self.make_default_appearance()
-        obj.C = []
-        # TODO allow setting border on free text boxes
-        obj.BS = _make_border_dict(width=0, style='S')
-        # TODO DS is required to have BB not redraw the annotation in their own
-        # style when you edit it.
-
 class FreeText(Annotation):
     """FreeText annotation. Right now, we only support writing text in the
     Helvetica font. Dealing with fonts is tricky business, so we'll leave that
@@ -393,3 +373,24 @@ def _get_horizontal_coordinates(lines, x1, x2, measure, align):
         widths = [measure(line) for line in lines]
         max_width = x2 - x1
         return [x1 + (max_width - width) - PADDING for width in widths]
+
+class PopupText(FreeText):
+    """Text Annotation. Based upon FreeText.
+    Implements a "notepad" style text annotation, which should be couples
+    into another annotation by using the /Popup property
+    """
+    subtyp = "Text"
+    indirect = True
+
+    '''
+    TODO: Add Contents
+    '''
+    def add_additional_pdf_object_data(self, obj):
+        obj.Contents = self._appearance.content
+        obj.DA = self.make_default_appearance()
+        obj.C = []
+        # TODO allow setting border on free text boxes
+        obj.BS = _make_border_dict(width=0, style='S')
+        # TODO DS is required to have BB not redraw the annotation in their own
+        # style when you edit it.
+
