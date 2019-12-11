@@ -20,6 +20,7 @@ from pdf_annotate.annotations.points import Polyline
 from pdf_annotate.annotations.rect import Circle
 from pdf_annotate.annotations.rect import Square
 from pdf_annotate.annotations.text import FreeText
+from pdf_annotate.annotations.text import PopupText 
 from pdf_annotate.config.metadata import Metadata
 from pdf_annotate.config.metadata import UNSET
 from pdf_annotate.graphics import ContentStream
@@ -40,6 +41,7 @@ NAME_TO_ANNOTATION = {
     'polyline': Polyline,
     'ink': Ink,
     'text': FreeText,
+    'popuptext': PopupText,
     'image': Image,
 }
 
@@ -142,6 +144,7 @@ class PdfAnnotator(object):
         location,
         appearance,
         metadata=None,
+        related={}
     ):
         """Add an annotation of the given type, with the given parameters, to
         the given location of the PDF.
@@ -163,8 +166,10 @@ class PdfAnnotator(object):
             location,
             appearance,
             metadata,
+            related
         )
         self._add_annotation(annotation)
+        return annotation
 
     @staticmethod
     def _resolve_metadata(metadata):
@@ -193,7 +198,7 @@ class PdfAnnotator(object):
                 'Unsupported UserUnit (value: {})'.format(user_unit)
             )
 
-    def get_annotation(self, annotation_type, location, appearance, metadata):
+    def get_annotation(self, annotation_type, location, appearance, metadata, related):
         # TODO filter on valid PDF versions, by type
         annotation_cls = NAME_TO_ANNOTATION.get(annotation_type)
         if annotation_cls is None:
@@ -201,7 +206,7 @@ class PdfAnnotator(object):
                 annotation_type
             ))
 
-        annotation = annotation_cls(location, appearance, metadata)
+        annotation = annotation_cls(location, appearance, metadata, related)
         annotation.validate(self._pdf.pdf_version)
         return annotation
 
