@@ -41,7 +41,7 @@ class Annotation(object):
     """
     versions = ALL_VERSIONS
 
-    def __init__(self, location, appearance, metadata=None):
+    def __init__(self, location, appearance, metadata=None, related = {}):
         """
         :param Location location:
         :param Appearance appearance:
@@ -50,6 +50,7 @@ class Annotation(object):
         self._location = location
         self._appearance = appearance
         self._metadata = metadata
+        self._related = related
 
     def as_pdf_object(self, transform, page):
         """Return the PdfDict object representing the annotation, that will be
@@ -73,6 +74,11 @@ class Annotation(object):
             AP=appearance_stream,
             P=page,
         )
+
+        for name in self._related:
+            subobject = self._related[name].as_pdf_object(transform, page)
+            page.append(subobject)
+            setatr(self, name, subobject)
 
         self._add_metadata(obj, self._metadata)
         self.add_additional_pdf_object_data(obj)
