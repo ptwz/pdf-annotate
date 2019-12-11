@@ -74,11 +74,9 @@ class Annotation(object):
             AP=appearance_stream,
             P=page,
         )
-
         for name in self._related:
             subobject = self._related[name].as_pdf_object(transform, page)
-            page.append(subobject)
-            setatr(self, name, subobject)
+            setattr(obj, name, subobject)
 
         self._add_metadata(obj, self._metadata)
         self.add_additional_pdf_object_data(obj)
